@@ -4,8 +4,9 @@ import com.sylphem.leaguesfromsportdb.data.model.RemoteLeague
 import com.sylphem.leaguesfromsportdb.data.model.RemoteTeam
 import com.sylphem.leaguesfromsportdb.data.remote.SportsApiService
 import com.sylphem.leaguesfromsportdb.domain.repository.SportsRepository
+import javax.inject.Inject
 
-class SportsRepositoryImpl constructor(
+class SportsRepositoryImpl @Inject constructor(
 
     private val sportsApiService: SportsApiService
 

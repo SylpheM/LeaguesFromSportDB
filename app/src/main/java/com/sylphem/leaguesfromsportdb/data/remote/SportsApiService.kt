@@ -7,10 +7,10 @@ import retrofit2.http.Query
 
 interface SportsApiService {
 
-    @GET("/all_leagues.php")
+    @GET("all_leagues.php")
     suspend fun getLeagues(): LeaguesResponse
 
-    @GET("/search_all_teams.php")
+    @GET("search_all_teams.php")
     suspend fun getTeams(@Query("l") league: String): TeamsResponse
 
 }

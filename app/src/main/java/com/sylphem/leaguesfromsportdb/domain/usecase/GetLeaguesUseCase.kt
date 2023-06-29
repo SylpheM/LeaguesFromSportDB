@@ -2,8 +2,9 @@ package com.sylphem.leaguesfromsportdb.domain.usecase
 
 import com.sylphem.leaguesfromsportdb.domain.model.League
 import com.sylphem.leaguesfromsportdb.domain.repository.SportsRepository
+import javax.inject.Inject
 
-class GetLeaguesUseCase constructor(
+class GetLeaguesUseCase @Inject constructor(
     private val sportsRepository: SportsRepository
 ) {
 
