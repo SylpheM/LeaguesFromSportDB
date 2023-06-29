@@ -1,4 +1,4 @@
-package com.sylphem.leaguesfromsportdb.ui.theme
+package com.sylphem.leaguesfromsportdb.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
