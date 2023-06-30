@@ -145,66 +145,52 @@ fun SearchField(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MainScreenLoadingPreview() {
-    LeaguesFromSportDBTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            MainScreen(
-                screenState = ScreenState.Loading(""),
-                onSearchChange = { },
-                onClearSearch = { },
-                onLeagueSelected = { }
+class SampleScreenStateProvider : PreviewParameterProvider<ScreenState> {
+    override val values: Sequence<ScreenState>
+        get() = sequenceOf(
+            ScreenState.Loading(""),
+            ScreenState.Error("", R.string.get_leagues_fail),
+            ScreenState.Suggestions(
+                "Ligue",
+                listOf(
+                    League(id = 1, name = "Ligue 1"),
+                    League(id = 2, name = "Ligue 2"),
+                    League(id = 3, name = "Ligue 3")
+                )
+            ),
+            ScreenState.Teams(
+                "Ligue 1",
+                listOf(
+                    Team(
+                        id = 1,
+                        name = "Team 1",
+                        logo = "https://www.thesportsdb.com/images/media/team/badge/z69be41598797026.png"
+                    ),
+                    Team(
+                        id = 2,
+                        name = "Team 2",
+                        logo = "https://www.thesportsdb.com/images/media/team/badge/wrytst1426871249.png"
+                    ),
+                    Team(
+                        id = 3,
+                        name = "Team 3",
+                        logo = "https://www.thesportsdb.com/images/media/team/badge/aikowk1546475003.png"
+                    )
+                )
             )
-        }
-    }
+        )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreenSuggestionsPreview() {
+fun MainScreenLoadingPreview(@PreviewParameter(SampleScreenStateProvider::class) data: ScreenState) {
     LeaguesFromSportDBTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
             MainScreen(
-                screenState = ScreenState.Suggestions(
-                    "Ligue",
-                    listOf(
-                        League(id = 1, name = "Ligue 1"),
-                        League(id = 2, name = "Ligue 2"),
-                        League(id = 3, name = "Ligue 3")
-                    )
-                ),
-                onSearchChange = { },
-                onClearSearch = { },
-                onLeagueSelected = { }
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenTeamsPreview() {
-    LeaguesFromSportDBTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            MainScreen(
-                screenState = ScreenState.Teams(
-                    "Ligue 1",
-                    listOf(
-                        Team(id = 1, name = "Team 1", logo = ""),
-                        Team(id = 2, name = "Team 2", logo = ""),
-                        Team(id = 3, name = "Team 3", logo = "")
-                    )
-                ),
+                screenState = data,
                 onSearchChange = { },
                 onClearSearch = { },
                 onLeagueSelected = { }
