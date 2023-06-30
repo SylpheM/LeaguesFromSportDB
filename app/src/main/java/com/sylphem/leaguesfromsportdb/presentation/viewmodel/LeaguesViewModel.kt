@@ -14,7 +14,6 @@ import com.sylphem.leaguesfromsportdb.presentation.ui.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,11 +56,10 @@ class LeaguesViewModel @Inject constructor(
         )
 
     fun loadData() {
-        viewModelScope.launch(coroutineContextProvider.UI) {
+        viewModelScope.launch(coroutineContextProvider.IO) {
             _loadingFlow.value = true
-            val result = withContext(coroutineContextProvider.IO) {
-                getLeaguesUseCase()
-            }
+            val result = getLeaguesUseCase()
+
             _loadingFlow.value = false
             when (result) {
                 is Result.Success -> {
@@ -94,11 +92,10 @@ class LeaguesViewModel @Inject constructor(
     fun onLeagueSelected(league: League) {
         _searchValueFlow.value = league.name
         _errorFlow.value = null
-        viewModelScope.launch(coroutineContextProvider.UI) {
+        viewModelScope.launch(coroutineContextProvider.IO) {
             _loadingFlow.value = true
-            val result = withContext(coroutineContextProvider.IO) {
-                getTeamsUseCase(league.name)
-            }
+            val result = getTeamsUseCase(league.name)
+
             _loadingFlow.value = false
             when (result) {
                 is Result.Success -> {
