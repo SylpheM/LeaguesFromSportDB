@@ -7,13 +7,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
+import com.sylphem.leaguesfromsportdb.presentation.ui.MainScreen
 import com.sylphem.leaguesfromsportdb.presentation.ui.theme.LeaguesFromSportDBTheme
 import com.sylphem.leaguesfromsportdb.presentation.viewmodel.LeaguesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -24,29 +24,30 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         viewModel.loadData()
-
-        setContent {
-            LeaguesFromSportDBTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+        lifecycleScope.launch {
+            viewModel.screenStateFlow.collect { screenState ->
+                setContent {
+                    LeaguesFromSportDBTheme {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.background
+                        ) {
+                            MainScreen(
+                                screenState = screenState,
+                                onSearchChange = {
+                                    viewModel.onSearch(it)
+                                },
+                                onClearSearch = {
+                                    viewModel.onClearSearch()
+                                },
+                                onLeagueSelected = {
+                                    viewModel.onLeagueSelected(it)
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    LeaguesFromSportDBTheme {
-        Greeting("Android")
     }
 }
