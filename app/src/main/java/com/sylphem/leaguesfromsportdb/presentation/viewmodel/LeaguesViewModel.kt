@@ -3,6 +3,7 @@ package com.sylphem.leaguesfromsportdb.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sylphem.leaguesfromsportdb.R
 import com.sylphem.leaguesfromsportdb.domain.model.League
 import com.sylphem.leaguesfromsportdb.domain.model.Result
 import com.sylphem.leaguesfromsportdb.domain.model.Team
@@ -11,7 +12,6 @@ import com.sylphem.leaguesfromsportdb.domain.usecase.GetTeamsUseCase
 import com.sylphem.leaguesfromsportdb.presentation.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,15 +30,19 @@ class LeaguesViewModel @Inject constructor(
     private val _suggestionsListFlow = MutableStateFlow<List<League>>(emptyList())
     private val _teamsListFlow = MutableStateFlow<List<Team>>(emptyList())
     private val _loadingFlow = MutableStateFlow(true)
+    private val _errorFlow = MutableStateFlow<Int?>(null)
 
     val screenStateFlow: StateFlow<ScreenState> =
         combine(
             _searchValueFlow,
             _suggestionsListFlow,
             _teamsListFlow,
-            _loadingFlow
-        ) { searchValue, suggestionsList, teamsList, loading ->
-            if (loading) {
+            _loadingFlow,
+            _errorFlow
+        ) { searchValue, suggestionsList, teamsList, loading, error ->
+            if (error != null) {
+                ScreenState.Error(searchValue, error)
+            } else if (loading) {
                 ScreenState.Loading(searchValue)
             } else if (teamsList.isNotEmpty()) {
                 ScreenState.Teams(searchValue, teamsList)
@@ -57,13 +61,17 @@ class LeaguesViewModel @Inject constructor(
             val result = withContext(Dispatchers.IO) {
                 getLeaguesUseCase()
             }
+            _loadingFlow.value = false
             when (result) {
                 is Result.Success -> {
-                    _loadingFlow.value = false
                     _leaguesListFlow.value = result.value
                 }
                 is Result.Failure -> {
-                    Log.d("LeaguesViewModel", "Failed to get leagues")
+                    _errorFlow.value = R.string.get_leagues_fail
+                    Log.w(
+                        "LeaguesViewModel",
+                        "Failed to get leagues " + result.error.localizedMessage
+                    )
                 }
             }
         }
@@ -71,6 +79,7 @@ class LeaguesViewModel @Inject constructor(
 
     fun onSearch(searchValue: String) {
         _searchValueFlow.value = searchValue
+        _errorFlow.value = null
         _teamsListFlow.value = emptyList()
         viewModelScope.launch {
             _suggestionsListFlow.value = if (searchValue.isBlank()) {
@@ -83,18 +92,23 @@ class LeaguesViewModel @Inject constructor(
 
     fun onLeagueSelected(league: League) {
         _searchValueFlow.value = league.name
+        _errorFlow.value = null
         viewModelScope.launch {
             _loadingFlow.value = true
             val result = withContext(Dispatchers.IO) {
                 getTeamsUseCase(league.name)
             }
+            _loadingFlow.value = false
             when (result) {
                 is Result.Success -> {
-                    _loadingFlow.value = false
                     _teamsListFlow.value = result.value
                 }
                 is Result.Failure -> {
-                    Log.d("LeaguesViewModel", "Failed to get teams")
+                    _errorFlow.value = R.string.get_teams_fail
+                    Log.w(
+                        "LeaguesViewModel",
+                        "Failed to get teams " + result.error.localizedMessage
+                    )
                 }
             }
         }
@@ -104,5 +118,6 @@ class LeaguesViewModel @Inject constructor(
         _searchValueFlow.value = ""
         _teamsListFlow.value = emptyList()
         _suggestionsListFlow.value = emptyList()
+        _errorFlow.value = null
     }
 }

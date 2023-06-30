@@ -3,4 +3,6 @@
     <string name="search_by_league">Search by league</string>
     <string name="search">Search</string>
     <string name="clear">Clear</string>
+    <string name="get_teams_fail">Sorry, we could not retrieve the teams.</string>
+    <string name="get_leagues_fail">Sorry, we could not retrieve the leagues.</string>
 </resources>

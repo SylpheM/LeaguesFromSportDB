@@ -3,16 +3,16 @@ package com.sylphem.leaguesfromsportdb.presentation.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.sylphem.leaguesfromsportdb.R
 import com.sylphem.leaguesfromsportdb.domain.model.League
 import com.sylphem.leaguesfromsportdb.domain.model.Team
@@ -41,44 +42,69 @@ fun MainScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    LazyColumn(
+    Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        stickyHeader {
-            SearchField(
-                searchValue = screenState.searchValue,
-                onValueChange = onSearchChange,
-                onClear = onClearSearch,
-                focusRequester = focusRequester
-            )
-        }
+        SearchField(
+            searchValue = screenState.searchValue,
+            onValueChange = onSearchChange,
+            onClear = onClearSearch,
+            focusRequester = focusRequester
+        )
+
         when (screenState) {
-            is ScreenState.Loading -> {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(46.dp)
-                    ) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                }
-            }
-            is ScreenState.Suggestions -> items(screenState.leagues) { league ->
+            is ScreenState.Error -> {
+                Icon(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    imageVector = Icons.Default.Warning,
+                    contentDescription = "",
+                    tint = MaterialTheme.colors.primary
+                )
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
-                        .clickable {
-                            onLeagueSelected(league)
-                            focusManager.clearFocus()
-                        },
-                    text = league.name
+                        .padding(horizontal = 32.dp),
+                    text = stringResource(id = screenState.errorMessage)
                 )
             }
-            is ScreenState.Teams -> items(screenState.teams) { team ->
-                Text(text = team.name)
+            is ScreenState.Loading -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(46.dp)
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+
             }
+            is ScreenState.Suggestions -> {
+                LazyColumn {
+                    items(screenState.leagues) { league ->
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .clickable {
+                                    onLeagueSelected(league)
+                                    focusManager.clearFocus()
+                                },
+                            text = league.name
+                        )
+                    }
+                }
+            }
+            is ScreenState.Teams ->
+                LazyVerticalGrid(cells = GridCells.Fixed(2)) {
+                    items(screenState.teams) { team ->
+                        AsyncImage(
+                            modifier = Modifier.padding(horizontal = 32.dp, 16.dp),
+                            model = team.logo,
+                            contentDescription = team.name
+                        )
+                    }
+                }
         }
     }
 }

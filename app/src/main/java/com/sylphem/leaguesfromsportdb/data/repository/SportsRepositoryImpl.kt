@@ -24,7 +24,12 @@ class SportsRepositoryImpl @Inject constructor(
 
     override suspend fun getTeams(leagueName: String): Result<List<RemoteTeam>> {
         return try {
-            Result.Success(sportsApiService.getTeams(leagueName).teams)
+            val teamsResponse = sportsApiService.getTeams(leagueName)
+            if (teamsResponse.teams == null) {
+                Result.Failure(Exception("No data for this league"))
+            } else {
+                Result.Success(teamsResponse.teams)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             Result.Failure(e)
