@@ -18,13 +18,13 @@ Define in your local gradle.properties the sportsDB's url with your own API key:
 
 sportsdbUrl="https://www.thesportsdb.com/api/v1/json/{API_KEY}/"
 
+See the details of the API here : https://www.thesportsdb.com/api.php
+
 ## Remarks:
 
 - There is no equivalent to AutoCompleteTextView in Compose, so I've done a simple replacement with
   a list.
 - Ideally, we should use latest libraries and gradle versions. To go faster I did not update them.
-- Ideally, we want unit tests on everything testable: repositories, use cases, viewModels... I've
-  only created one to test the specific rules of team sorting and filtering.
 - We could add a placeholder when loading images and handle image errors.
 - We could further explicit the error message by checking the type of error (IOException for network
   issues, etc.)
