@@ -1,5 +1,6 @@
 package com.sylphem.leaguesfromsportdb.di
 
+import com.sylphem.leaguesfromsportdb.BuildConfig
 import com.sylphem.leaguesfromsportdb.data.remote.SportsApiService
 import dagger.Module
 import dagger.Provides
@@ -16,7 +17,7 @@ class NetworkModule {
     @Provides
     fun providesRetrofitSportsApi(): SportsApiService {
         return Retrofit.Builder()
-            .baseUrl("https://www.thesportsdb.com/api/v1/json/50130162/")
+            .baseUrl(BuildConfig.HOST_API)
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(SportsApiService::class.java)
     }
