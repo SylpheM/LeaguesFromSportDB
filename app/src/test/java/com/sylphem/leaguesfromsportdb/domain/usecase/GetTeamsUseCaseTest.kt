@@ -23,17 +23,17 @@ class GetTeamsUseCaseTest {
                     RemoteTeam(
                         idTeam = 1,
                         strTeam = "AAA",
-                        strTeamLogo = "logoAAA"
+                        strTeamBadge = "logoAAA"
                     ),
                     RemoteTeam(
                         idTeam = 2,
                         strTeam = "BBB",
-                        strTeamLogo = "logoBBB"
+                        strTeamBadge = "logoBBB"
                     ),
                     RemoteTeam(
                         idTeam = 3,
                         strTeam = "CCC",
-                        strTeamLogo = "logoCCC"
+                        strTeamBadge = "logoCCC"
                     )
                 )
             )

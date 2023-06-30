@@ -17,7 +17,7 @@ class GetTeamsUseCase @Inject constructor(
                     Team(
                         id = it.idTeam ?: -1,
                         name = it.strTeam ?: "",
-                        logo = it.strTeamLogo
+                        logo = it.strTeamBadge
                     )
                 }
                     .filterIndexed { index, _ -> index % 2 == 0 }
