@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sylphem.leaguesfromsportdb.R
+import com.sylphem.leaguesfromsportdb.core.CoroutineContextProvider
 import com.sylphem.leaguesfromsportdb.domain.model.League
 import com.sylphem.leaguesfromsportdb.domain.model.Result
 import com.sylphem.leaguesfromsportdb.domain.model.Team
@@ -11,7 +12,6 @@ import com.sylphem.leaguesfromsportdb.domain.usecase.GetLeaguesUseCase
 import com.sylphem.leaguesfromsportdb.domain.usecase.GetTeamsUseCase
 import com.sylphem.leaguesfromsportdb.presentation.ui.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +21,8 @@ import javax.inject.Inject
 class LeaguesViewModel @Inject constructor(
 
     private val getLeaguesUseCase: GetLeaguesUseCase,
-    private val getTeamsUseCase: GetTeamsUseCase
+    private val getTeamsUseCase: GetTeamsUseCase,
+    private val coroutineContextProvider: CoroutineContextProvider
 
 ) : ViewModel() {
 
@@ -56,9 +57,9 @@ class LeaguesViewModel @Inject constructor(
         )
 
     fun loadData() {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineContextProvider.UI) {
             _loadingFlow.value = true
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(coroutineContextProvider.IO) {
                 getLeaguesUseCase()
             }
             _loadingFlow.value = false
@@ -93,9 +94,9 @@ class LeaguesViewModel @Inject constructor(
     fun onLeagueSelected(league: League) {
         _searchValueFlow.value = league.name
         _errorFlow.value = null
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineContextProvider.UI) {
             _loadingFlow.value = true
-            val result = withContext(Dispatchers.IO) {
+            val result = withContext(coroutineContextProvider.IO) {
                 getTeamsUseCase(league.name)
             }
             _loadingFlow.value = false

@@ -4,18 +4,20 @@ import com.sylphem.leaguesfromsportdb.data.model.RemoteTeam
 import com.sylphem.leaguesfromsportdb.domain.model.Result
 import com.sylphem.leaguesfromsportdb.domain.model.Team
 import com.sylphem.leaguesfromsportdb.domain.repository.SportsRepository
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
-class GetTeamsUseCaseTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+internal class GetTeamsUseCaseTest {
 
     @Test
-    fun getTeamsSuccess() = runBlocking {
+    fun getTeamsSuccess() = runTest {
         /* Given */
         val mockSportsRepository = mock<SportsRepository> {
             onBlocking { getTeams("toto") } doReturn Result.Success(
@@ -58,7 +60,7 @@ class GetTeamsUseCaseTest {
     }
 
     @Test
-    fun getTeamsFailure() = runBlocking {
+    fun getTeamsFailure() = runTest {
         /* Given */
         val exception = Exception()
         val mockSportsRepository = mock<SportsRepository> {
