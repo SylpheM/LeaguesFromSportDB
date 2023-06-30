@@ -1,4 +1,4 @@
-package com.sylphem.leaguesfromsportdb.presentation
+package com.sylphem.leaguesfromsportdb.presentation.ui
 
 import androidx.annotation.StringRes
 import com.sylphem.leaguesfromsportdb.domain.model.League

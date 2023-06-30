@@ -27,7 +27,6 @@ import coil.compose.AsyncImage
 import com.sylphem.leaguesfromsportdb.R
 import com.sylphem.leaguesfromsportdb.domain.model.League
 import com.sylphem.leaguesfromsportdb.domain.model.Team
-import com.sylphem.leaguesfromsportdb.presentation.ScreenState
 import com.sylphem.leaguesfromsportdb.presentation.ui.theme.LeaguesFromSportDBTheme
 
 @OptIn(ExperimentalFoundationApi::class)

@@ -9,7 +9,7 @@ import com.sylphem.leaguesfromsportdb.domain.model.Result
 import com.sylphem.leaguesfromsportdb.domain.model.Team
 import com.sylphem.leaguesfromsportdb.domain.usecase.GetLeaguesUseCase
 import com.sylphem.leaguesfromsportdb.domain.usecase.GetTeamsUseCase
-import com.sylphem.leaguesfromsportdb.presentation.ScreenState
+import com.sylphem.leaguesfromsportdb.presentation.ui.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

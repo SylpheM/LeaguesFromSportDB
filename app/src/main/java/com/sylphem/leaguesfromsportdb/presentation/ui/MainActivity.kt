@@ -1,4 +1,4 @@
-package com.sylphem.leaguesfromsportdb.presentation
+package com.sylphem.leaguesfromsportdb.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
