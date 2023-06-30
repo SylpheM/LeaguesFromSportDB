@@ -22,6 +22,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sylphem.leaguesfromsportdb.R
@@ -81,16 +83,17 @@ fun MainScreen(
             is ScreenState.Suggestions -> {
                 LazyColumn {
                     items(screenState.leagues) { league ->
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp)
-                                .clickable {
-                                    onLeagueSelected(league)
-                                    focusManager.clearFocus()
-                                },
-                            text = league.name
-                        )
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onLeagueSelected(league)
+                                focusManager.clearFocus()
+                            }) {
+                            Text(
+                                modifier = Modifier.padding(8.dp),
+                                text = league.name
+                            )
+                        }
                     }
                 }
             }
